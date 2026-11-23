@@ -117,7 +117,8 @@ def plan_changes(old, new, old_idx, new_idx):
 def analyze(current, target):
     old, old_idx = connect_and_inspect(current)
     new, new_idx = connect_and_inspect(target)
-    changes, forward, rollback = plan_changes(old, new, old_idx, new_idx)
+    changes, forward, _rollback_hint = plan_changes(old, new, old_idx, new_idx)
+    _reverse_changes, rollback, _reverse_hint = plan_changes(new, old, new_idx, old_idx)
     severities = {c["severity"] for c in changes}
     risk = "BREAKING_DESTRUCTIVE" if "BREAKING_DESTRUCTIVE" in severities else ("CAUTION_LOCK_RISK" if "CAUTION_LOCK_RISK" in severities else "SAFE_ADDITIVE")
     dry_run = {"passed": False, "message": ""}
