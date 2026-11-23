@@ -60,6 +60,11 @@ def plan_changes(old, new, old_idx, new_idx):
         forward.append("DROP TABLE " + quote_ident(name) + ";")
         rollback.insert(0, create_table_sql(name, old[name]["sql"]))
         changes.append({"table": name, "kind": "table_removed", "severity": "BREAKING_DESTRUCTIVE", "message": "Table removal destroys stored data"})
+    for name in sorted(new_names - old_names):
+        for idx in new_idx.get(name, []):
+            if idx["sql"]:
+                forward.append(idx["sql"].rstrip(";") + ";")
+                changes.append({"table": name, "kind": "index_added", "index": idx["name"], "severity": "CAUTION_LOCK_RISK", "message": "Index creation may scan or lock a large table"})
     for name in sorted(old_names & new_names):
         before, after = column_map(old[name]), column_map(new[name])
         added, removed = sorted(set(after)-set(before)), sorted(set(before)-set(after))
