@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070a12">
+  <meta name="description" content="Compare database schemas, lint migration hazards, and verify forward SQL with SQLite.">
+  <title>SchemaDiff — Migration Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">S</span><span>Schema<span class="accent">Diff</span><small>DATABASE CHANGE INTELLIGENCE</small></span></a>
+      <div class="engine"><span class="pulse"></span><span id="engineStatus">SchemaDiff Engine: Active • SQLite Dry-Run Verifier Ready</span></div>
+      <div class="top-actions"><span id="riskBadge" class="risk-badge neutral">AWAITING DIFF</span><button id="presetBtn" class="btn btn-quiet">Load Migration Preset</button><button id="dropBtn" class="btn btn-danger-ghost">Test Destructive Drop</button></div>
+    </header>
+    <main>
+      <section class="hero">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> SCHEMA INTELLIGENCE / WORKSPACE 01</div><h1>Ship schema changes.<br><span>Not surprises.</span></h1><p>Compare production and target DDL, surface migration hazards, and validate your rollout plan against a real SQLite engine.</p></div>
+        <div class="hero-stat"><span class="stat-label">ANALYSIS ENGINE</span><strong>SQLITE <b>3</b></strong><span class="stat-foot">IN-MEMORY · ISOLATED · READ-SAFE</span></div>
+      </section>
+      <section class="editor-grid">
+        <article class="panel editor-panel"><div class="panel-head"><div><span class="step">01 / SOURCE</span><h2>Current Production DDL</h2></div><span class="dot-label"><i></i> BASELINE</span></div><textarea id="currentDdl" spellcheck="false" aria-label="Current production DDL" placeholder="CREATE TABLE customers (&#10;  id INTEGER PRIMARY KEY,&#10;  email TEXT NOT NULL UNIQUE&#10;);"></textarea><div class="editor-foot"><span id="currentCount">0 CHARACTERS</span><button class="text-btn" data-clear="currentDdl">Clear editor</button></div></article>
+        <article class="panel editor-panel target-panel"><div class="panel-head"><div><span class="step">02 / TARGET</span><h2>Proposed Target DDL</h2></div><span class="dot-label cyan"><i></i> PROPOSAL</span></div><textarea id="targetDdl" spellcheck="false" aria-label="Proposed target DDL" placeholder="Paste your target CREATE TABLE and CREATE INDEX statements..."></textarea><div class="editor-foot"><span id="targetCount">0 CHARACTERS</span><button class="text-btn" data-clear="targetDdl">Clear editor</button></div></article>
+      </section>
+      <div class="run-row"><div class="preset-select"><label for="presetSelect">SCENARIO</label><select id="presetSelect"><option value="">Choose a migration preset…</option></select></div><button id="computeBtn" class="btn btn-primary"><span>↗</span> Compute Diff &amp; Dry-Run</button><span id="runStatus" class="run-status">Ready for analysis</span></div>
+      <section class="results-grid">
+        <article class="panel result-panel"><div class="panel-head"><div><span class="step">03 / INTELLIGENCE</span><h2>Structural Diff &amp; Hazard Linter</h2></div><span id="dryBadge" class="dry-badge">NOT RUN</span></div><div id="summaryStats" class="summary-stats"><div><strong>—</strong><span>TABLES ADDED</span></div><div><strong>—</strong><span>TABLES REMOVED</span></div><div><strong>—</strong><span>CHANGE EVENTS</span></div></div><div id="changeList" class="change-list empty-state">Run a schema comparison to see table and column changes.</div></article>
+        <article class="panel advice-panel"><div class="panel-head"><div><span class="step">04 / ROLLOUT</span><h2>Migration Safety Notes</h2></div></div><div id="advice" class="advice-content"><div class="advice-icon">⌁</div><h3>Understand the blast radius</h3><p>SchemaDiff inspects the actual SQLite catalog and flags destructive or potentially locking operations before you ship.</p><ul><li>Review removed columns against application usage.</li><li>Backfill new required fields before enforcing NOT NULL.</li><li>Build large indexes with an engine-appropriate rollout strategy.</li></ul></div></article>
+      </section>
+      <section class="scripts-grid">
+        <article class="panel script-panel"><div class="panel-head"><div><span class="step">05 / EXECUTION PLAN</span><h2>Forward Migration</h2></div><button class="copy-btn" data-copy="forwardSql">COPY SQL</button></div><pre><code id="forwardSql">-- Forward migration will appear here.</code></pre></article>
+        <article class="panel script-panel rollback-panel"><div class="panel-head"><div><span class="step">06 / RECOVERY PLAN</span><h2>Rollback Script</h2></div><button class="copy-btn" data-copy="rollbackSql">COPY SQL</button></div><pre><code id="rollbackSql">-- Rollback SQL will appear here.</code></pre></article>
+      </section>
+      <footer><span>SCHEMADIFF <b>v1.0</b> · SQLITE-POWERED ANALYSIS</span><span>ADVISORY ONLY — REVIEW BEFORE PRODUCTION EXECUTION</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
